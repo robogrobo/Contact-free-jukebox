@@ -20,6 +20,11 @@
 
 #include <SoftwareSerial.h>
 
+//  audio settings
+boolean PlayComplete = true;
+long playnext_prevmillis = 0;
+long playanother_time = 3000;
+
 //  sdcard settings
 SdReader card;
 FatVolume vol;
@@ -196,7 +201,16 @@ void checkTag(char tag[]) {
       putstring("playing: "); Serial.println(audiofiles[a]);
       digitalWrite(RFIDResetPin, LOW);
       delay(500);  // avoid loudspeaker click noise
-      playcomplete(audiofiles[a]);
+      if(PlayComplete) {
+        playcomplete(audiofiles[a]);
+      } else {
+        unsigned long playnext_currentmillis = millis();
+        // wait with playing another audio track
+        if(playnext_currentmillis - playnext_prevmillis > playanother_time) {
+          playfile(audiofiles[a]);
+          playnext_prevmillis = playnext_currentmillis;
+        }
+      }
       break;
     }
   }
