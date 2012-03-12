@@ -3,14 +3,14 @@
 
   this is the firmware for the contact-free jukebox.
   that can play audio tracks depending on rfid tags.
-  
+
   attached to the arduino is an adafruit waveshield
   and an id-12 rfid reader.
-  
+
   created @ 8.1.12 by dominik grob (@ruedi)
-  
+
   credits to charlie's rfid teddy bear
-  
+
   website: scalotta.tumblr.com
 */
 
@@ -31,7 +31,7 @@ FatReader f;
 WaveHC wave;
 
 //  rfid settings
-SoftwareSerial RFIDSerial(8, 6); 
+SoftwareSerial RFIDSerial(8, 6);
 
 int RFIDResetPin = 7;
 char RFIDtag[14];
@@ -62,33 +62,33 @@ void setup() {
   Serial.begin(9600);
   putstring_nl("debug");
   putstring_nl("----------------");
-  
+
   putstring("Free RAM: ");
   Serial.println(freeRam());
-  
+
   //  set output pins for DAC control
   //  pins are defined in the library
   pinMode(2, OUTPUT);
   pinMode(3, OUTPUT);
   pinMode(4, OUTPUT);
   pinMode(5, OUTPUT);
- 
+
   // pin13 LED
   pinMode(13, OUTPUT);
-   
+
   if (!card.init()) {
     putstring_nl("Card init. failed!");
     sdErrorCheck();
     while(1);
   }
-  
+
   // enable optimize read
   card.partialBlockRead(true);
- 
+
   // fat partition?
   uint8_t part;
   for (part = 0; part < 5; part++) {
-    if (vol.init(card, part)) 
+    if (vol.init(card, part))
       break;
   }
   if (part == 5) {
@@ -96,27 +96,27 @@ void setup() {
     sdErrorCheck();
     while(1);
   }
-  
+
   // show infos
   putstring("Using partition ");
   Serial.print(part, DEC);
   putstring(", type is FAT");
   Serial.println(vol.fatType(),DEC);
-  
+
   if (!root.openRoot(vol)) {
     putstring_nl("Can't open root dir!");
     while(1);
   }
-  
+
   putstring_nl("> sdcard ready");
-  
+
   // rfid setup
   pinMode(RFIDResetPin, OUTPUT);
   digitalWrite(RFIDResetPin, HIGH);
   RFIDSerial.begin(9600);
-  
+
   putstring_nl("> rfid ready");
-  
+
   // play startup chime
   delay(500);  // avoid loudspeaker click noise
   playcomplete("chime.wav");
@@ -141,8 +141,8 @@ void loop() {
   //  check tag and play track if tag id found
   checkTag(RFIDtag);
   //  prepare for next read
-  clearTag(RFIDtag);  
-  resetReader(); 
+  clearTag(RFIDtag);
+  resetReader();
 }
 
 void playcomplete(char *name) {
@@ -162,7 +162,7 @@ void playfile(char *name) {
   if (!wave.create(f)) {
     putstring_nl("Not a valid WAV"); return;
   }
-  
+
   wave.play();
 }
 
@@ -180,7 +180,7 @@ void clearTag(char one[]) {
 
 void checkTag(char tag[]) {
   if(strlen(tag) == 0) return;
-  
+
   boolean matching = true;
 
   //  compare tag id
@@ -192,7 +192,7 @@ void checkTag(char tag[]) {
         break;
       }
     }
-    
+
     //  in case of a match play the track
     if(matching) {
       putstring("playing: "); Serial.println(audiofiles[a]);
@@ -209,17 +209,17 @@ void checkTag(char tag[]) {
 // debug functions
 // ---------------------------
 int freeRam(void) {
-  extern int  __bss_end; 
-  extern int  *__brkval; 
-  int free_memory; 
+  extern int  __bss_end;
+  extern int  *__brkval;
+  int free_memory;
   if((int)__brkval == 0) {
-    free_memory = ((int)&free_memory) - ((int)&__bss_end); 
+    free_memory = ((int)&free_memory) - ((int)&__bss_end);
   }
   else {
-    free_memory = ((int)&free_memory) - ((int)__brkval); 
+    free_memory = ((int)&free_memory) - ((int)__brkval);
   }
-  return free_memory; 
-} 
+  return free_memory;
+}
 
 void sdErrorCheck(void) {
   if (!card.errorCode()) return;
