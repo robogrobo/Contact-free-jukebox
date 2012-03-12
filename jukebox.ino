@@ -9,9 +9,7 @@
 
   created @ 8.1.12 by dominik grob (@ruedi)
 
-  credits to charlie's rfid teddy bear
-
-  website: scalotta.tumblr.com
+  more information: http://tmblr.co/ZKZ-twHiQ_OK
 */
 
 #include <FatReader.h>
