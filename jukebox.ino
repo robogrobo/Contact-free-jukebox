@@ -199,9 +199,9 @@ void checkTag(char tag[]) {
     //  in case of a match play the track
     if(matching) {
       putstring("playing: "); Serial.println(audiofiles[a]);
-      digitalWrite(RFIDResetPin, LOW);
       delay(500);  // avoid loudspeaker click noise
       if(PlayComplete) {
+        digitalWrite(RFIDResetPin, LOW);
         playcomplete(audiofiles[a]);
       } else {
         unsigned long playnext_currentmillis = millis();
