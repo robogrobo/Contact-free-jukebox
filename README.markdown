@@ -11,9 +11,15 @@ Features
 * plays a complete audio track that is associated with an rfid tag
 * set option to change audio track during playback
 
-More
-----
+Build it
+--------
 
 Get build instructions and parts list on [scalotta.tumblr.com](http://tmblr.co/ZKZ-twHiQ_OK)
+
+Use it
+------
+
+You need to download the excellent [wavehc](http://code.google.com/p/wavehc/downloads/list) library for the Adafruit Wave Shield in order to use the firmware.
+
 
 
