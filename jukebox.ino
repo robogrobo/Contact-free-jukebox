@@ -41,6 +41,8 @@ char RFIDtag[14];
 int RFIDindex = 0;
 boolean RFIDreading = false;
 
+boolean debug = true;
+
 //  define tag id and tracks
 #define NUMTAGS 8
 char audiotags[NUMTAGS][14] = {"0100C4B7B2C0",
@@ -183,6 +185,14 @@ void clearTag(char one[]) {
 
 void checkTag(char tag[]) {
   if(strlen(tag) == 0) return;
+
+  if(debug) {
+    putstring("rfid tag id: ");
+    for(int d = 0; d < 12; d++) {
+      Serial.print(tag[d]);
+    }
+    Serial.println();
+  }
 
   boolean matching = true;
 
