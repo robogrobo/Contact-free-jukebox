@@ -10,6 +10,7 @@ Features
 
 * plays a complete audio track that is associated with an rfid tag
 * set option to change audio track during playback
+* prints rfid id in serial monitor for easy system setup
 
 Build it
 --------
